@@ -65,12 +65,6 @@ components on the frontend as possible.
 Our clients are not tech savvy so it would be great if we can find a way to retrieve
 projects that were deleted mistakenly.
 
-**Developer Experience**
-
-- Currently, in order to run this project locally we need dependencies such as MySQL.
-Since we plan to add more dependencies in the future, it would be good if we can
-start taking care of the developer experience and provide containerized environment.
-
 **Questions**
 
 - How would you make sure this app is reliable and how would you keep track of 
