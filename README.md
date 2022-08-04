@@ -18,11 +18,15 @@ offsetting projects. The current functionallity includes:
 You need:
 
 - Node version >= 12.
-- MySQL - you can view/change the configs in cozero-backend/.env file.
+- Docker
 
 
 ### How to run
 
+MySQL in Docker
+```
+docker-compose up -d
+```
 
 Backend running on port 3001
 ```
@@ -36,7 +40,6 @@ Frontend running on port 3000
 cd cozero-frontend
 npm i
 npm run dev
-
 ```
 
 ## Requirements
@@ -67,5 +70,10 @@ projects that were deleted mistakenly.
 
 **Questions**
 
-- How would you make sure this app is reliable and how would you keep track of 
-the performance of it?
+- What kind of metrics would you collect from your application to know that everything is OK?
+- Now, lets imagine we want to scale this app for different countries and we want to have projects
+in different languages. All of the current projects we have should be defaulted to English, 
+however for the new projects we should let users pick a language. How would you change the database in
+order to support this?
+- After supporting 6 new languages, we suddenly get a huge influx of new projects. We currently have over 1.000.000 projects in our database. The response time of the /projects endpoint went from 50ms to 3s. Assuming the frontend is fetching data per language and within specific timeframe (from - to date), what would you do in oder to make the app faster? 
+E.g. request from the frontend -> `GET /projects?language=${lang}&createdAtGreaterThan=${date}&createdAtLowerThan=${date}`
