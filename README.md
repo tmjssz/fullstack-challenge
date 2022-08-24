@@ -48,10 +48,9 @@ We need to build upon our MVP and possibly fix some bugs.
 
 **Improvements**
 
-- Currently when making a request to create a new project we can omit the listing proposal field. We need to make the field listing proposal required.
+- We need to be able to search for projects. Create an API endpoint that searches for project by their title/description. The API response should be with the same fields as the listing project. 
 
-- We need to be able to search for projects. On the projects page, we he need a component
-that would search by the title and/or the description of the project and it should be done in such way to reuse as much as components on the frontend as possible.
+- Currently when making a request to create a new project we can omit the listing proposal field. We need to make the field listing proposal required.
 
 - We realized that some of the clients sometimes would mistakenly delete projects.
 Our clients are not tech savvy so it would be great if we can find a way to retrieve
