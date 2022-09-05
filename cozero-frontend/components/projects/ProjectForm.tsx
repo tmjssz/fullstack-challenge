@@ -4,50 +4,60 @@ import { BsFillTrashFill } from "react-icons/bs"
 import { TbLeaf } from "react-icons/tb"
 import { useForm, useFieldArray } from "react-hook-form";
 import { CreateProjectDto, ProjectForm as IProjectForm, Project, UpdateProjectDto } from "../../interfaces/project.interface";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { createProjectDefaultValues } from "../../constants/project.constants";
-import { useSession } from "next-auth/react";
 import ProjectsService from "../../services/ProjectsService";
-import { useRouter } from "next/router";
 import { translate } from "../../utils/language.utils";
 import { ProjectInformation } from "../../enums/projectInformation.enum";
 import { getProjectResponseTranslation, projectFormToProjectDTO } from "../../utils/project.utils";
+import { useNavigate, useParams } from "react-router";
+import { AuthContext } from "../../context/auth";
 
-interface Props {
-    projectToUpdate?: Project
-}
-
-export default function ProjectForm({ projectToUpdate }: Props) {
+export default function ProjectForm() {
+    const { id } = useParams()
     const [listItem, setListItem] = useState<string>("");
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
-    const { data: session } = useSession()
     const toast = useToast()
-    const navigator = useRouter()
+    const navigate = useNavigate()
     const { register, handleSubmit, watch, control, setValue, reset } = useForm<IProjectForm>({
         defaultValues: createProjectDefaultValues
-    });
+    })
+    const { context } = useContext(AuthContext)
+
     const { append, remove } = useFieldArray({
         control,
         name: "listing",
     });
 
-    useEffect(() => {
-        if (projectToUpdate) {
-            reset({
-                ...projectToUpdate,
-                listing: projectToUpdate.listing.map(item => {
-                    return {
-                        id: Date.now().toString() + Math.random().toString(),
-                        name: item
-                    }
-                }),
-                co2EstimateReduction: {
-                    min: projectToUpdate.co2EstimateReduction[0],
-                    max: projectToUpdate.co2EstimateReduction[1]
-                }
-            })
+    const fetchProjectById = useCallback(async (id: string) => {
+        const project = await ProjectsService.fetchProjectById(id)
+
+        if (!project) {
+            return
         }
-    }, [projectToUpdate, reset])
+
+        reset({
+            ...project,
+            listing: project.listing.map(item => {
+                return {
+                    id: Date.now().toString() + Math.random().toString(),
+                    name: item
+                }
+            }),
+            co2EstimateReduction: {
+                min: project.co2EstimateReduction[0],
+                max: project.co2EstimateReduction[1]
+            }
+        })
+
+    }, [reset])
+
+
+    useEffect(() => {
+        if (id) {
+            fetchProjectById(id)
+        }
+    }, [id, fetchProjectById])
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !!listItem) {
@@ -63,12 +73,12 @@ export default function ProjectForm({ projectToUpdate }: Props) {
     const onSubmitForm = async (projectForm: IProjectForm) => {
         setIsProcessing(true);
 
-        const project: CreateProjectDto | UpdateProjectDto = projectFormToProjectDTO(projectForm, session?.user?.email as string)
+        const project: CreateProjectDto | UpdateProjectDto = projectFormToProjectDTO(projectForm, context?.user?.email as string)
 
-        const projectResponse = projectToUpdate ? await ProjectsService.updateProject(project as UpdateProjectDto) : await ProjectsService.createProject(project as CreateProjectDto);
+        const projectResponse = id ? await ProjectsService.updateProject(project as UpdateProjectDto) : await ProjectsService.createProject(project as CreateProjectDto);
         setIsProcessing(false);
 
-        const { title, description } = getProjectResponseTranslation(!!projectResponse, !!projectToUpdate);
+        const { title, description } = getProjectResponseTranslation(!!projectResponse, !!id);
 
         toast({
             title,
@@ -79,7 +89,7 @@ export default function ProjectForm({ projectToUpdate }: Props) {
         })
 
         if (projectResponse) {
-            navigator.push("/projects")
+            navigate("/projects")
         }
     }
 
@@ -90,11 +100,11 @@ export default function ProjectForm({ projectToUpdate }: Props) {
             <Stack spacing={8}>
                 <FormControl>
                     <FormLabel>{translate('PROJECT_NAME')}</FormLabel>
-                    <Input  type='text' placeholder="Amazonas forestation" {...register('name', { required: true })} />
+                    <Input type='text' placeholder="Amazonas forestation" {...register('name', { required: true })} />
                 </FormControl>
                 <FormControl>
                     <FormLabel>{translate('PROJECT_DESCRIPTION')}</FormLabel>
-                    <Textarea  rows={5} placeholder="Plant 12.000 autochthonous trees" {...register('description', { required: true })} />
+                    <Textarea rows={5} placeholder="Plant 12.000 autochthonous trees" {...register('description', { required: true })} />
                     <FormHelperText>{translate('PROJECT_DESCRIPTION_HELPER')}</FormHelperText>
                 </FormControl>
                 <FormControl>
@@ -146,9 +156,9 @@ export default function ProjectForm({ projectToUpdate }: Props) {
                 </List>
 
                 <Button colorScheme='green' type='submit' isLoading={isProcessing}>
-                    {translate(projectToUpdate ? 'UPDATE' : 'CREATE')} {translate('PROJECT')}
+                    {translate(id ? 'UPDATE' : 'CREATE')} {translate('PROJECT')}
                 </Button>
-                <Button isLoading={isProcessing} onClick={() => navigator.back()}>
+                <Button isLoading={isProcessing} onClick={() => navigate(-1)}>
                     {translate('GO_BACK')}
                 </Button>
             </Stack>

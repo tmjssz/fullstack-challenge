@@ -38,6 +38,7 @@ export enum LanguageEN {
     CO2e='CO2e',
     ALREADY_HAVE_AN_ACCOUNT='Already have an account?',
     SIGN_IN='Sign in',
+    SIGN_OUT='Sign out',
     CREATE_ACCOUNT='Create account',
     EMAIL='Email',
     PASSWORD='Password',
@@ -46,5 +47,8 @@ export enum LanguageEN {
     ACCOUNT_CREATED_ERROR='Account could not be created',
     ACCOUNT_CREATED_ERROR_DESCRIPTION='An error occurred while creating your account.',
     NEW_PROJECT='New project',
-    EMISSIONS_LEARN='Learn how  CO2e is calculated.'
+    EMISSIONS_LEARN='Learn how  CO2e is calculated.',
+    CREATE_PROJECT='Create project',
+    NO_PROJECTS_TITLE="You don't have any projects yet.",
+    NO_PROJECTS_DESCRIPTION='Create your first project now!',
 }

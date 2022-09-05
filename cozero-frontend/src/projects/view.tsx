@@ -1,12 +1,31 @@
 import { Avatar, chakra, Flex, Heading, List, ListIcon, ListItem, Stack, Stat, StatLabel, StatNumber, Text } from "@chakra-ui/react";
-import ProjectsService from "../../services/ProjectsService";
-import { GetStaticProps } from 'next'
-import { InferGetStaticPropsType } from 'next'
 import TimeAgo from 'react-timeago'
 import { TbLeaf } from "react-icons/tb";
 import { translate } from "../../utils/language.utils";
+import { useCallback, useEffect, useState } from "react";
+import { Project } from "../../interfaces/project.interface";
+import { useParams } from "react-router";
+import ProjectsService from "../../services/ProjectsService";
 
-export default function Project({ project }: InferGetStaticPropsType<typeof getStaticProps>) {
+export const ProjectViewPage = () => {
+    const [project, setProject] = useState<Project | null>(null)
+    const { id } = useParams<{ id: string }>()
+
+    const fetchProject = useCallback(async (id: string) => {
+        const project = await ProjectsService.fetchProjectById(id)
+        setProject(project ?? null)
+    }, [])
+
+    useEffect(() => {
+        if (id) {
+            fetchProject(id)
+        }
+    }, [id, fetchProject])
+
+    if (!project) {
+        return <div>Loading...</div>
+    }
+
     const TimeAgeComponent = chakra(TimeAgo)
     const LeafIcon = chakra(TbLeaf)
     const [min, max] = project.co2EstimateReduction
@@ -56,29 +75,4 @@ export default function Project({ project }: InferGetStaticPropsType<typeof getS
             </Flex>
         </Stack>
     );
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
-    const project = await ProjectsService.fetchProjectById(context?.params?.id as string);
-    return {
-        props: {
-            project
-        },
-    };
-}
-
-export async function getStaticPaths() {
-    const projects = await ProjectsService.fetchProjects();
-    const paths = projects?.map((item) => {
-        return {
-            params: {
-                id: item.id.toString(),
-            },
-        };
-    })
-
-    return {
-        paths,
-        fallback: false,
-    };
 }

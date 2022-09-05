@@ -4,11 +4,11 @@ import { FaLeaf } from "react-icons/fa"
 import { MdModeEditOutline } from "react-icons/md"
 import { BsFillTrashFill } from "react-icons/bs"
 import TimeAgo from 'react-timeago'
-import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
 import DeleteProjectConfirmation from "../DeleteProjectConfirmation"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { translate } from "../../utils/language.utils"
+import { useNavigate } from "react-router"
+import { AuthContext } from "../../context/auth"
 
 interface Props {
     project: Project
@@ -20,8 +20,9 @@ const TimeAgeComponent = chakra(TimeAgo)
 
 export default function ProjectItem({ project, onDelete }: Props) {
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false)
-    const navigate = useRouter()
-    const { data: session } = useSession()
+    const navigate = useNavigate()
+    const { context } = useContext(AuthContext)
+    const userEmail = context?.user?.email
 
     const onDeleteAction = () => {
         setIsDeleteConfirmationOpen(false)
@@ -42,9 +43,9 @@ export default function ProjectItem({ project, onDelete }: Props) {
             <Stack spacing={5}>
                 <Flex justifyContent='space-between'>
                     <Text fontWeight='bold'>{project.name}</Text>
-                    {session?.user?.email === project.owner && (
+                    {userEmail === project.owner && (
                         <Flex gap={3}>
-                            <MdModeEditOutline cursor='pointer' onClick={() => navigate.push(`/projects/edit/${project.id}`)} />
+                            <MdModeEditOutline cursor='pointer' onClick={() => navigate(`/projects/${project.id}/edit`)} />
                             <BsFillTrashFill cursor='pointer' onClick={() => setIsDeleteConfirmationOpen(true)} />
                         </Flex>
                     )}
@@ -52,11 +53,11 @@ export default function ProjectItem({ project, onDelete }: Props) {
                 <Text textAlign='justify' noOfLines={5}>{project.description}</Text>
                 <Flex alignItems='center' gap={2}>
                     <LeafIcon color={'green.500'} />
-                    <Text fontWeight='bold' color='green.500'>{project.co2EstimateReduction[0]} - {project.co2EstimateReduction[1]} co2e.</Text>
+                    <Text fontWeight='bold' color='green.500'>{project.co2EstimateReduction[0]} - {project.co2EstimateReduction[1]} tons co2e.</Text>
                 </Flex>
                 <Flex justifyContent='space-between' gap={4} alignItems='center'>
                     <Flex>
-                        <Button size='sm' onClick={() => navigate.push(`/projects/${project.id}`)}>
+                        <Button size='sm' onClick={() => navigate(`/projects/${project.id}`)}>
                             {translate('VIEW_FULL_PROJECT')}
                         </Button>
                     </Flex>

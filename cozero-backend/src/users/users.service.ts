@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserLoginDto } from './dto/user-login.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
   ) {}
 
   async findOne(email: string): Promise<User | undefined> {
@@ -22,12 +25,13 @@ export class UsersService {
       password: await bcrypt.hash(createUserDto.password, 10),
     };
 
-    const user = await this.findOne(createUserDto.email);
+    let user = await this.findOne(createUserDto.email);
+
     if (!user) {
-      return await this.usersRepository.save(userWithHashedPassword);
+      user = await this.usersRepository.save(userWithHashedPassword);
     }
 
-    return user;
+    return this.authService.login(createUserDto);
   }
 
   findAll(): Promise<User[]> {

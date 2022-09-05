@@ -9,9 +9,8 @@ offsetting projects. The current functionallity includes:
 
 ## Stack
 
-- Frontend: NextJS (React)
+- Frontend: ReactJS
 - Backend: NestJS + TypeORM + MySQL.
-
 
 ### Before run
 
