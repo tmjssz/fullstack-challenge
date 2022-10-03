@@ -1,7 +1,5 @@
-import { BACKEND_URL } from "../constants/backend.constants";
 import { UserLoginDTO, UserRegistrationDTO } from "../interfaces/user.dto";
 import HTTPService from "./HTTPService";
-import LocalStorageService from "./LocalStorageService";
 
 class UserService {
     public async register(user: UserRegistrationDTO) {

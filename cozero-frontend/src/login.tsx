@@ -43,12 +43,10 @@ const LoginPage = ({ isSignUp }: Props) => {
           <Button disabled={isButtonDisabled} type='submit'>{translate(isSignUp ? 'CREATE_ACCOUNT' : 'SIGN_IN')}</Button>
         </Stack>
       </form>
-      {!isSignUp && (
         <Flex gap={1} marginY={4}>
-          <Text>{translate('ALREADY_HAVE_AN_ACCOUNT')}</Text>
-          <Text fontWeight='bold' color='blue.700' cursor={'pointer'} onClick={() => navigate('/api/auth/signin')}>{translate('SIGN_IN')}</Text>
+          <Text>{translate(isSignUp ? 'ALREADY_HAVE_AN_ACCOUNT' : 'DONT_HAVE_AN_ACCOUNT')}</Text>
+          <Text fontWeight='bold' color='blue.700' cursor={'pointer'} onClick={() => navigate(isSignUp ? '/sign-in' : '/sign-up')}>{translate(isSignUp ?  'SIGN_IN' : 'SIGN_UP' )}</Text>
         </Flex>
-      )}
     </>
   )
 }

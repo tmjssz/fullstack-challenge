@@ -36,6 +36,7 @@ export const useAuth = () => {
             user: createdUser
         })
 
+        navigate('/')
         return createdUser;
     }, []);
 

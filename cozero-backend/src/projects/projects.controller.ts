@@ -18,7 +18,6 @@ export class ProjectsController {
 
   @Post('create')
   create(@Body() project: CreateProjectDto) {
-    console.log({ project });
     return this.projectsService.create(project);
   }
 
@@ -36,7 +35,6 @@ export class ProjectsController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    console.log('id');
     return this.projectsService.update(+id, updateProjectDto);
   }
 
