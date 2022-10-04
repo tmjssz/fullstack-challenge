@@ -18,7 +18,7 @@ export class ProjectsController {
 
   @Post('create')
   create(@Body() project: CreateProjectDto) {
-    return this.projectsService.create((project as any).createProjectDto);
+    return this.projectsService.create(project);
   }
 
   @SkipAuth()
@@ -35,7 +35,6 @@ export class ProjectsController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    console.log('id')
     return this.projectsService.update(+id, updateProjectDto);
   }
 

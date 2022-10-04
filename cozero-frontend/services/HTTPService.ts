@@ -3,7 +3,7 @@ import { BACKEND_URL } from "../constants/backend.constants";
 class HTTPService {
     public async get<T>(path: string, jwtToken?: string): Promise<T | undefined> {
         try {
-            const response = await fetch(path, {
+            const response = await fetch(`${BACKEND_URL}/${path}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ class HTTPService {
 
     public async post<T>(path: string, data: any, jwtToken?: string): Promise<T | undefined> {
         try {
-            const response = await fetch(path, {
+            const response = await fetch(`${BACKEND_URL}/${path}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ class HTTPService {
     }
 
     public async put<T>(path: string, data: any, jwtToken?: string): Promise<T> {
-        const response = await fetch(path, {
+        const response = await fetch(`${BACKEND_URL}/${path}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ class HTTPService {
     }
 
     public async delete<T>(path: string, jwtToken?: string): Promise<T> {
-        const response = await fetch(path, {
+        const response = await fetch(`${BACKEND_URL}/${path}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

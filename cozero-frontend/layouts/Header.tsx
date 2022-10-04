@@ -1,12 +1,12 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useNavigate } from "react-router";
 import Menu from "../components/menu/Menu";
-import SignInButton from "../components/SignInButton";
+import { SignInButton } from "../components/SignInButton";
 import { translate } from "../utils/language.utils";
 
 export default function Header() {
-    const router = useRouter()
+    const navigate = useNavigate()
 
     return (
         <header>
@@ -18,7 +18,7 @@ export default function Header() {
                         id='new-project'
                         leftIcon={<AiOutlinePlus />}
                         onClick={() => {
-                            router.push("/projects/create")
+                            navigate("/projects/create")
                         }}
                     >
                         {translate('NEW_PROJECT')}

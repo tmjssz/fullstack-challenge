@@ -1,13 +1,13 @@
-import { BACKEND_URL, FRONTEND_URL } from "../constants/backend.constants";
 import { CreateProjectDto, DeleteProjectResult, Project, UpdateProjectDto, UpdateProjectResult } from "../interfaces/project.interface";
 import HTTPService from "./HTTPService";
+import LocalStorageService from "./LocalStorageService";
 
 class ProjectsService {
     public async fetchProjects(): Promise<Project[] | undefined> {
         try {
-            const response = await fetch(`${FRONTEND_URL}api/projects`)
+            const projects = await HTTPService.get<Project[]>(`projects`)
 
-            return response.json() as Promise<Project[] | undefined>
+            return this.sortProjects(projects)
         }
         catch (e) {
             console.log('Error fetching projects', e)
@@ -17,9 +17,7 @@ class ProjectsService {
 
     public async fetchProjectById(id: string): Promise<Project | undefined> {
         try {
-            const response = await fetch(`${BACKEND_URL}projects/${id}`)
-
-            return response.json() as Promise<Project | undefined>
+            return HTTPService.get<Project>(`projects/${id}`)
         }
         catch (e) {
             console.log('Error fetching project', e)
@@ -29,7 +27,8 @@ class ProjectsService {
 
     public async updateProject(updatedProject: UpdateProjectDto): Promise<UpdateProjectResult | undefined> {
         try {
-            return HTTPService.put(`${FRONTEND_URL}api/projects/${updatedProject.id}`, updatedProject)
+            const jwtToken = LocalStorageService.getJwtToken()
+            return HTTPService.put(`projects/${updatedProject.id}`, updatedProject, jwtToken)
         } catch (e) {
             console.log('Error deleting project', e)
         }
@@ -38,15 +37,8 @@ class ProjectsService {
 
     public async createProject(createProjectDto: CreateProjectDto): Promise<Project | undefined> {
         try {
-            const response = await fetch(`${FRONTEND_URL}api/projects/create`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(createProjectDto)
-            })
-
-            return response.json() as Promise<Project | undefined>
+            const jwtToken = LocalStorageService.getJwtToken()
+            return HTTPService.post<Project>(`projects/create`, createProjectDto, jwtToken)
         }
         catch (e) {
             console.log('Error creating project', e)
@@ -55,7 +47,8 @@ class ProjectsService {
 
     public async deleteProject(id: string): Promise<DeleteProjectResult | undefined> {
         try {
-            return HTTPService.delete(`${FRONTEND_URL}api/projects/${id}`)
+            const jwtToken = LocalStorageService.getJwtToken()
+            return HTTPService.delete(`projects/${id}`, jwtToken)
         } catch (e) {
             console.log('Error deleting project', e)
         }

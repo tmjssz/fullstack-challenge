@@ -1,4 +1,3 @@
-import { signIn, useSession } from "next-auth/react"
 import { useEffect } from "react"
 
 interface Props {
@@ -6,8 +5,7 @@ interface Props {
 }
 
 export default function AuthenticatedView({ children }: Props) {
-    const { data: session, status } = useSession()
-    const isUser = !!session?.user
+    const isUser = true
 
     
     useEffect(() => {
@@ -16,10 +14,10 @@ export default function AuthenticatedView({ children }: Props) {
       }
 
       if (!isUser) {
-        signIn()
+        return
       }
 
-    }, [isUser, status])
+    }, [])
   
     if (isUser) {
       return <>{children}</>

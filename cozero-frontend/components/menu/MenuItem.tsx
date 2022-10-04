@@ -1,6 +1,6 @@
 import { Box, Text } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import React from 'react';
+
+import { useLocation, useNavigate, useRoutes } from 'react-router';
 
 interface Props {
     title: string;
@@ -8,14 +8,15 @@ interface Props {
 }
 
 export default function MenuItem({ title, href }: Props) {
-  const router = useRouter()
+  const navigate = useNavigate()
+  const router = useLocation()
 
   const handleClick = () => {
-    router.push(href)
+    navigate(href)
   }
 
   return (
-    <Box as='a' href={href} onClick={handleClick} color={router.asPath === href ? 'black.700' : 'gray.500'}>
+    <Box as='a' href={href} onClick={handleClick} color={router.pathname === href ? 'black.700' : 'gray.500'}>
       <Text fontWeight='bold'>
         {title}
       </Text>

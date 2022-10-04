@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UseGuards } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserLoginDto } from 'src/users/dto/user-login.dto';
 import * as bcrypt from 'bcrypt';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -14,14 +16,18 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(email);
 
+    if (!user) {
+      return null;
+    }
+
     const isPasswordMatch = await bcrypt.compare(pass, user.password);
     if (user && isPasswordMatch) {
-      const { password, ...result } = user; // Remove password from the result
-      return result;
+      return await this.login(user);
     }
     return null;
   }
 
+  @UseGuards(LocalAuthGuard)
   async login(user: UserLoginDto) {
     const payload = { email: user.email };
     return {
