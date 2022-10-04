@@ -47,9 +47,11 @@ We need to build upon our MVP and possibly fix some bugs.
 
 **Improvements**
 
-- We need to be able to search for projects. Create an API endpoint that searches for project by their title/description. The API response should be with the same fields as the listing project. 
+- Currently anyone can sign in with a wrong email/password combination. They can also visit the post-a-project page and can actually submit project. The project iself won't appear on the frontend or in the database, however users still get a success message when they submit a project. What can we do in order to fix this?
 
-- Currently when making a request to create a new project we can omit the listing proposal field. We need to make the field listing proposal required.
+- We are using LocalStorage for saving the authentication details. What can we do better to improve the way we use authentication?
+
+- We need to be able to search for projects. Create an API endpoint that searches for project by their title/description. The API response should be with the same fields as the listing project. 
 
 - We realized that some of the clients sometimes would mistakenly delete projects.
 Our clients are not tech savvy so it would be great if we can find a way to retrieve
@@ -62,3 +64,4 @@ projects that were deleted mistakenly.
 E.g. request from the frontend -> `GET /projects?language=${lang}&createdAtGreaterThan=${date}&createdAtLowerThan=${date}`
 - What else can we do in order to improve the time?
 - What kind of metrics would you collect from your application to know that everything is OK?
+- How would you deploy this application?
