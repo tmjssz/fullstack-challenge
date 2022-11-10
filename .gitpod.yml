@@ -5,7 +5,7 @@ tasks:
     before: cd cozero-backend
     init: npm i
   - name: npm i frontend
-    before: cd cozero-backend
+    before: cd cozero-frontend
     init: npm i
 
 github:
