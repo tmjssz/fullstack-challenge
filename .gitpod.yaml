@@ -5,10 +5,10 @@ tasks:
       docker-compose up -d
   - name: npm i backend
     before: cd cozero-backend
-    command: npm i -g lerna
+    command: npm i
   - name: npm i frontend
     before: cd cozero-backend
-    command: npm i -g lerna
+    command: npm i
 
 github:
   prebuilds:
