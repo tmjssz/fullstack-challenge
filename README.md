@@ -71,7 +71,7 @@ projects that were deleted mistakenly.
 ## How to submit
 
 1. Remove the "draft" mode
-2. Assign it back to @tiago-taveira 
+2. Assign it back to your hiring manager
 3. Send an email with an answer to the questions and a confirmation that you're done with the challenge
 
 ## What happens next
