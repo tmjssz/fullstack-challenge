@@ -69,8 +69,7 @@ projects that were deleted mistakenly.
 - What kind of metrics would you collect from your application to know that everything is OK?
 
 ## How to submit
-
-1. Remove the "draft" mode
+1. Create a PR and commit your changes
 2. Assign it back to your hiring manager
 3. Send an email with an answer to the questions and a confirmation that you're done with the challenge
 
