@@ -3,9 +3,11 @@ import HTTPService from "./HTTPService";
 import LocalStorageService from "./LocalStorageService";
 
 class ProjectsService {
-    public async fetchProjects(): Promise<Project[] | undefined> {
+    public async fetchProjects(query?: string | null): Promise<Project[] | undefined> {
         try {
-            const projects = await HTTPService.get<Project[]>(`projects`)
+            const projects = await  HTTPService.get<Project[]>(
+                query != null ? `projects/search?q=${query}` : `projects`
+            ) 
 
             return this.sortProjects(projects)
         }

@@ -4,7 +4,7 @@ import { translate } from "../../utils/language.utils"
 import { TbMoodEmpty } from "react-icons/tb"
 import { useNavigate } from "react-router"
 
-export const ProjectsEmptyState = () => {
+export const ProjectsEmptyState = ({ query }: { query?: string | null; }) => {
     const navigate = useNavigate()
 
     return (
@@ -15,7 +15,11 @@ export const ProjectsEmptyState = () => {
             justifyContent={'center'}
             flexDirection='column'>
             <TbMoodEmpty size={60} />
-            <Heading size='lg' textAlign='center'>{translate('NO_PROJECTS_TITLE')}</Heading>
+            <Heading size='lg' textAlign='center'>
+                {query != null
+                    ? `${translate('NO_PROJECTS_FOUND_TITLE')} "${query}"`
+                    : translate('NO_PROJECTS_TITLE')}
+            </Heading>
             <Text>
                 {translate('NO_PROJECTS_DESCRIPTION')}
             </Text>

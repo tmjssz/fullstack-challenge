@@ -1,31 +1,33 @@
 import {  Flex, Stack, Text, useToast } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProjectsEmptyState } from "./ProjectsEmptyState"
 import { Project } from "../../interfaces/project.interface";
 import ProjectsService from "../../services/ProjectsService";
 import { translate } from "../../utils/language.utils";
 import ProjectItem from "./ProjectItem";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 export default function ProjectsList() {
     const [projectList, setProjectList] = useState<Project[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
     const toast = useToast();
+    
+    const query = useMemo(() => searchParams.get('q'), [searchParams])
 
-
-
-    const fetchProjects = useCallback(async () => {
-        const projects = await ProjectsService.fetchProjects()
-        if (projects && projects?.length !== 0) {
+    const fetchProjects = useCallback(async (query: string | null) => {
+        const projects = await ProjectsService.fetchProjects(query)
+        if (projects) {
             setProjectList(projects)
         }
         setIsLoading(false)
     }, [])
 
     useEffect(() => {
-        fetchProjects()
-    }, [fetchProjects])
+        fetchProjects(query)
+    }, [fetchProjects, query])
 
 
     const onDelete = async (projectId: string) => {
@@ -45,7 +47,7 @@ export default function ProjectsList() {
     }
 
     if (projectList.length === 0 && !isLoading) {
-        return <ProjectsEmptyState />
+        return <ProjectsEmptyState query={query}/>
     }
 
     return (
