@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormHelperText, FormLabel, Input, List, ListIcon, ListItem, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, List, ListIcon, ListItem, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
 import { FaLeaf } from "react-icons/fa"
 import { BsFillTrashFill } from "react-icons/bs"
 import { TbLeaf } from "react-icons/tb"
@@ -19,7 +19,7 @@ export default function ProjectForm() {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const toast = useToast()
     const navigate = useNavigate()
-    const { register, handleSubmit, watch, control, setValue, reset } = useForm<IProjectForm>({
+    const { register, handleSubmit, watch, control, setValue, reset, formState: { errors } } = useForm<IProjectForm>({
         defaultValues: createProjectDefaultValues
     })
     const { context } = useContext(AuthContext)
@@ -27,7 +27,8 @@ export default function ProjectForm() {
     const { append, remove } = useFieldArray({
         control,
         name: "listing",
-    });
+        rules: { minLength: 1, required: true }
+    });    
 
     const fetchProjectById = useCallback(async (id: string) => {
         const project = await ProjectsService.fetchProjectById(id)
@@ -98,11 +99,11 @@ export default function ProjectForm() {
     return (
         <form onSubmit={handleSubmit(onSubmitForm)}>
             <Stack spacing={8}>
-                <FormControl>
+                <FormControl isInvalid={!!errors.name}>
                     <FormLabel>{translate('PROJECT_NAME')}</FormLabel>
                     <Input type='text' placeholder="Amazonas forestation" {...register('name', { required: true })} />
                 </FormControl>
-                <FormControl>
+                <FormControl isInvalid={!!errors.description}>
                     <FormLabel>{translate('PROJECT_DESCRIPTION')}</FormLabel>
                     <Textarea rows={5} placeholder="Plant 12.000 autochthonous trees" {...register('description', { required: true })} />
                     <FormHelperText>{translate('PROJECT_DESCRIPTION_HELPER')}</FormHelperText>
@@ -133,7 +134,7 @@ export default function ProjectForm() {
                         {translate('CO2E_CALCULATION_C2A')}
                     </FormHelperText>
                 </FormControl>
-                <FormControl>
+                <FormControl isInvalid={!!errors.listing}>
                     <FormLabel>{translate('LISTING_PROPOSALS')}</FormLabel>
                     <Input type='text'
                         id='listing-proposal-input'
@@ -142,6 +143,7 @@ export default function ProjectForm() {
                         onKeyDown={onKeyDown}
                     />
                     <FormHelperText>{translate('ADD_PROPOSAL_ENTER')}</FormHelperText>
+                    {errors.listing ? <FormErrorMessage>{translate('PROPOSAL_REQUIRED')}</FormErrorMessage> : null}
                 </FormControl>
                 <List spacing={3} id='listing-proposals'>
                     {listing.map((item, index) => (
