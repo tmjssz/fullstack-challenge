@@ -1,4 +1,13 @@
-import React, { ChangeEvent, ComponentProps, FC, KeyboardEvent, ReactElement, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  ComponentProps,
+  FC,
+  KeyboardEvent,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   InputGroup,
   Input,
@@ -6,22 +15,27 @@ import {
   StyleProps,
 } from "@chakra-ui/react";
 import { translate } from "../../utils/language.utils";
+import { useQueryParam } from "../../hooks/useQueryParam"
 import { AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
 
-export const SearchProjectsInput: FC<StyleProps> = ({ ...props }): ReactElement => {
-    const [searchParams] = useSearchParams();
-
-    const query = useMemo(() => searchParams.get('q') || "", [searchParams])
-
-    const [value, setValue] = useState(query);
+export const SearchProjectsInput: FC<StyleProps> = ({
+  ...props
+}): ReactElement => {
+  const [query] = useQueryParam("q");
+  const [value, setValue] = useState(query);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setValue(query)
+  }, [query])
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
-      navigate(value && value.length > 0 ? `/projects?q=${value}` : "/projects");
+      navigate(
+        value && value.length > 0 ? `/projects?q=${value}` : "/projects"
+      );
     }
   };
 
@@ -34,8 +48,8 @@ export const SearchProjectsInput: FC<StyleProps> = ({ ...props }): ReactElement 
         <AiOutlineSearch />
       </InputLeftElement>
       <Input
-        placeholder={translate('SEARCH_PROJECTS')}
-        value={value}
+        placeholder={translate("SEARCH_PROJECTS")}
+        value={value ||  ""}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       />

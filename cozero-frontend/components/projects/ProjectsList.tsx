@@ -1,18 +1,12 @@
 import { Button, Flex, Stack, Text, useToast, VStack } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProjectsEmptyState } from "./ProjectsEmptyState"
 import { Project } from "../../interfaces/project.interface";
 import ProjectsService from "../../services/ProjectsService";
 import { translate } from "../../utils/language.utils";
+import { useQueryParam } from "../../hooks/useQueryParam"
 import ProjectItem from "./ProjectItem";
 import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
-
-const useQueryParam = (param: string) => {
-    const [searchParams] = useSearchParams();
-    const value = searchParams.get(param)
-    return [value]
-}
 
 export default function ProjectsList() {
     const [projectList, setProjectList] = useState<Project[]>([])
