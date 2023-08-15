@@ -46,4 +46,8 @@ export class ProjectsService {
   async remove(id: number) {
     return this.projectsRepository.delete(id);
   }
+  
+  async restore(id: number) {
+    return this.projectsRepository.restore(id);
+  }
 }
