@@ -67,6 +67,15 @@ class ProjectsService {
         }
     }
 
+    public async restoreProject(id: string): Promise<DeleteProjectResult | undefined> {
+        try {
+            const jwtToken = LocalStorageService.getJwtToken()
+            return HTTPService.put(`projects/restore/${id}`, {}, jwtToken)
+        } catch (e) {
+            console.log('Error restoring project', e)
+        }
+    }
+
     public sortProjects = (projects: Project[] | undefined) => {
         return projects?.sort((a, b) => {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();

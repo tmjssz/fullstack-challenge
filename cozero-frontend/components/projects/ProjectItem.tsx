@@ -13,12 +13,13 @@ import { AuthContext } from "../../context/auth"
 interface Props {
     project: Project
     onDelete?: (projectId: string) => void
+    onRestore?: (projectId: string) => void
 }
 
 const LeafIcon = chakra(FaLeaf)
 const TimeAgeComponent = chakra(TimeAgo)
 
-export default function ProjectItem({ project, onDelete = () => {} }: Props) {
+export default function ProjectItem({ project, onDelete = () => {}, onRestore = () => {} }: Props) {
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false)
     const navigate = useNavigate()
     const { context } = useContext(AuthContext)
@@ -47,7 +48,7 @@ export default function ProjectItem({ project, onDelete = () => {} }: Props) {
                     {userEmail === project.owner && (
                         isDeleted ? (
                             <Flex gap={3}>
-                                <FaTrashRestore cursor='pointer' onClick={() => navigate(`/projects/${project.id}/edit`)} />
+                                <FaTrashRestore cursor='pointer' onClick={() => onRestore(project.id)} />
                             </Flex>
                         ) : (
                             <Flex gap={3}>
