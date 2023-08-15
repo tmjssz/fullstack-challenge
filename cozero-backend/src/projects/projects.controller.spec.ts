@@ -19,10 +19,29 @@ const mockAuthService = {
   login: jest.fn(),
 };
 
+const mockProjects: Project[] = [
+  {
+    co2EstimateReduction: [1, 2],
+    createdAt: 'now',
+    deletedAt: null,
+    description: 'First mocked project',
+    id: 1,
+    isActive: true,
+    listing: ['foo', 'bar'],
+    name: 'Mock 1',
+    owner: 'me',
+    updatedAt: 'now',
+  },
+];
+
 describe('ProjectsController', () => {
   let controller: ProjectsController;
+  let service: ProjectsService;
 
+  beforeEach(() => {});
   beforeEach(async () => {
+    jest.resetAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProjectsController],
       providers: [
@@ -39,9 +58,22 @@ describe('ProjectsController', () => {
     }).compile();
 
     controller = module.get<ProjectsController>(ProjectsController);
+    service = module.get<ProjectsService>(ProjectsService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('/search', () => {
+    const mockQuery = 'mockQuery';
+
+    it('should return project items returned by the service', async () => {
+      jest.spyOn(service, 'findBy').mockResolvedValueOnce(mockProjects);
+
+      expect(await controller.findBy({ q: mockQuery })).toBe(mockProjects);
+      expect(service.findBy).toHaveBeenCalledTimes(1);
+      expect(service.findBy).toHaveBeenCalledWith(mockQuery);
+    });
   });
 });
