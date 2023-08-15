@@ -30,6 +30,12 @@ export class ProjectsController {
   }
 
   @SkipAuth()
+  @Get('removed')
+  findAllRemoved() {
+    return this.projectsService.findAllRemoved();
+  }
+
+  @SkipAuth()
   @Get('search')
   findBy(@Query() searchProjectsQueryParamsDto: SearchProjectsQueryParamsDto) {
     return this.projectsService.findBy(searchProjectsQueryParamsDto.q);
@@ -48,6 +54,6 @@ export class ProjectsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.projectsService.remove(+id);
+    return this.projectsService.softRemove(+id);
   }
 }
