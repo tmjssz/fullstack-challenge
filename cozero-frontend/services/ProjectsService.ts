@@ -17,6 +17,17 @@ class ProjectsService {
         }
     }
 
+    public async fetchDeletedProjects(): Promise<Project[] | undefined> {
+        try {
+            const projects = await HTTPService.get<Project[]>(`projects/removed`) 
+            return this.sortProjects(projects)
+        }
+        catch (e) {
+            console.log('Error fetching deleted projects', e)
+            return Promise.resolve([])
+        }
+    }
+
     public async fetchProjectById(id: string): Promise<Project | undefined> {
         try {
             return HTTPService.get<Project>(`projects/${id}`)

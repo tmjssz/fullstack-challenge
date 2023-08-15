@@ -6,6 +6,7 @@ import Layout from '../layouts/Layout'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from '.'
 import ProjectsList from "../components/projects/ProjectsList"
+import ProjectsTrash from "../components/projects/ProjectsTrash"
 import LoginPage from './login'
 import CreateProjectPage from './projects/create'
 import { ProjectViewPage } from './projects/view'
@@ -28,6 +29,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/projects" element={<ProjectsList />} />
+              <Route path="/projects/deleted" element={<ProjectsTrash />} />
               <Route path='/sign-up' element={<LoginPage isSignUp={true} />} />
               <Route path='/sign-in' element={<LoginPage isSignUp={false} />} />
               <Route path='/projects/create' element={<CreateProjectPage />} />

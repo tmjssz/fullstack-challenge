@@ -13,7 +13,7 @@ export default function Header() {
     <header>
       <Flex justifyContent="space-between" p={6} gap={4}>
         <Menu />
-        <SearchProjectsInput />
+        <SearchProjectsInput maxWidth={300}/>
         <Flex alignItems="center" gap={4}>
           <Button
             variant="outline"

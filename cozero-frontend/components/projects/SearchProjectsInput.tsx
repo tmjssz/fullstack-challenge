@@ -1,15 +1,16 @@
-import React, { ChangeEvent, FC, KeyboardEvent, ReactElement, useMemo, useState } from "react";
+import React, { ChangeEvent, ComponentProps, FC, KeyboardEvent, ReactElement, useMemo, useState } from "react";
 import {
   InputGroup,
   Input,
   InputLeftElement,
+  StyleProps,
 } from "@chakra-ui/react";
 import { translate } from "../../utils/language.utils";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 
-export const SearchProjectsInput: FC<{}> = (): ReactElement => {
+export const SearchProjectsInput: FC<StyleProps> = ({ ...props }): ReactElement => {
     const [searchParams] = useSearchParams();
 
     const query = useMemo(() => searchParams.get('q') || "", [searchParams])
@@ -28,7 +29,7 @@ export const SearchProjectsInput: FC<{}> = (): ReactElement => {
     setValue(event.target.value);
 
   return (
-    <InputGroup>
+    <InputGroup {...props}>
       <InputLeftElement pointerEvents="none">
         <AiOutlineSearch />
       </InputLeftElement>

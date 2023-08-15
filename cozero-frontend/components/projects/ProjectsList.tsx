@@ -1,4 +1,4 @@
-import {  Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import { Button, Flex, Stack, Text, useToast, VStack } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProjectsEmptyState } from "./ProjectsEmptyState"
 import { Project } from "../../interfaces/project.interface";
@@ -8,15 +8,19 @@ import ProjectItem from "./ProjectItem";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 
+const useQueryParam = (param: string) => {
+    const [searchParams] = useSearchParams();
+    const value = searchParams.get(param)
+    return [value]
+}
+
 export default function ProjectsList() {
     const [projectList, setProjectList] = useState<Project[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
+    const [query] = useQueryParam('q');
     const toast = useToast();
     
-    const query = useMemo(() => searchParams.get('q'), [searchParams])
-
     const fetchProjects = useCallback(async (query: string | null) => {
         const projects = await ProjectsService.fetchProjects(query)
         if (projects) {
@@ -27,7 +31,7 @@ export default function ProjectsList() {
 
     useEffect(() => {
         fetchProjects(query)
-    }, [fetchProjects, query])
+    }, [query])
 
 
     const onDelete = async (projectId: string) => {
@@ -51,23 +55,28 @@ export default function ProjectsList() {
     }
 
     return (
-        <Stack spacing={8}>
-            {projectList?.map(project => (
-                <ProjectItem key={project.id} project={project} onDelete={onDelete} />
-            ))
-            }
-            <Flex gap={2} justifyContent='center'>
-                <Text>{translate('PROJECTS_FOOTER_CTA')}</Text>
-                <Text
-                    onClick={() => navigate(`/projects/create`)}
-                    cursor='pointer'
-                    fontWeight='bold'
-                    color='green.500'
-                    textAlign='center'
-                >
-                    {translate('PROJECTS_FOOTER_CTA_BUTTON')}
-                </Text>
-            </Flex>
-        </Stack>
+        <VStack spacing={8} alignItems="end">
+            <Button size='sm' variant='outline' onClick={() => navigate(`/projects/deleted`)}>
+                {translate("SHOW_DELETED_PROJECTS")}
+            </Button>
+            <Stack spacing={8} width="100%">
+                {projectList?.map(project => (
+                    <ProjectItem key={project.id} project={project} onDelete={onDelete} />
+                ))
+                }
+                <Flex gap={2} justifyContent='center'>
+                    <Text>{translate('PROJECTS_FOOTER_CTA')}</Text>
+                    <Text
+                        onClick={() => navigate(`/projects/create`)}
+                        cursor='pointer'
+                        fontWeight='bold'
+                        color='green.500'
+                        textAlign='center'
+                    >
+                        {translate('PROJECTS_FOOTER_CTA_BUTTON')}
+                    </Text>
+                </Flex>
+            </Stack>
+        </VStack>
     )
 }
